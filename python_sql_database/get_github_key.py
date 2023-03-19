@@ -1,6 +1,6 @@
 
 
-import connect_to_postgresql.py
+# import https://raw.githubusercontent.com/AinaKIKISAGBE/tools_public/main/python_sql_database/connect_to_postgresql.py
 
 def func_github_key():
 	conn, cursor = create_connection()
