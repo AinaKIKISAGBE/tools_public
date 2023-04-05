@@ -33,7 +33,9 @@ service ssh start
 sed -i 's/#Port 22/Port 22/' /etc/ssh/sshd_config
 # enable root permission ssh remote
 sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
-service ssh restart
+#service ssh restart
+service ssh reload
+service ssh start 
 apt-get update 
 #RUN service ssh start
 
