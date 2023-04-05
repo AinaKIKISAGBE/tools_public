@@ -87,6 +87,18 @@ mkdir /myapp/tools_private
 git clone https://${GITHUB_TOKEN_keep}@github.com/AinaKIKISAGBE/tools_private.git /myapp/tools_private
 chmod -R 777 /myapp 
 
+
+
+
+
+
+cp /myapp/tools_private/vm_provitionning/master/docker/Dockerfile_provision_master.sh  Dockerfile_provision_master.sh 
+chmod +x Dockerfile_provision_master.sh
+/Dockerfile_provision_master.sh
+
+
+
+'''
 ################### service creator  master_update_iptable ####################
 chmod 777 /myapp/tools_public/tools/service_creator.sh  
 #chmod 777 /myapp/tools_public/tools/service_creator_docker.sh  
@@ -111,6 +123,7 @@ logoutput_master_run_jobmaster /myapp/tools_public/tools/service_creator.sh "mas
 ################### service creator  launch_worker_docker ####################
 chmod 777 /myapp/tools_public/tools/service_creator.sh  
 logoutput_launch_worker_docker /myapp/tools_public/tools/service_creator.sh "launch_worker_docker" "/myapp/tools_private/vm_provitionning/master/launch_worker_docker.sh"  & ls && ls
+'''
 
 
 
