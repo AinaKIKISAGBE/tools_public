@@ -93,37 +93,10 @@ chmod -R 777 /myapp
 
 
 cp /myapp/tools_private/vm_provitionning/master/docker/Dockerfile_provision_master.sh  Dockerfile_provision_master.sh 
-chmod +x Dockerfile_provision_master.sh
+chmod +x Dockerfile_provision_master.sh 
 /Dockerfile_provision_master.sh
 
 
-
-'''
-################### service creator  master_update_iptable ####################
-chmod 777 /myapp/tools_public/tools/service_creator.sh  
-#chmod 777 /myapp/tools_public/tools/service_creator_docker.sh  
-logoutput_master_update_iptable /myapp/tools_public/tools/service_creator.sh "master_update_iptable" "/myapp/tools_private/vm_provitionning/master/master_update_iptable.sh"  & ls && ls
-
-
-################### save SURFSHARK_key   ####################
-mkdir /SURFSHARK_TOKEN/
-chmod -R 777 /SURFSHARK_TOKEN 
-python3 /myapp/tools_public/python_sql_database/save_SURFSHARK_key_on_vm.py
-
-#### add permission 
-chmod -R 777 /myapp 
-chmod +x /myapp/tools_private/vm_provitionning/vpn/surfshak/surfshak_vpn_openvpn.sh
-
-
-################### service creator  master_run_jobmaster ####################
-chmod 777 /myapp/tools_public/tools/service_creator.sh  
-logoutput_master_run_jobmaster /myapp/tools_public/tools/service_creator.sh "master_run_jobmaster" "/myapp/tools_private/vm_provitionning/master/master_run_jobmaster.sh" & ls && ls
-
-
-################### service creator  launch_worker_docker ####################
-chmod 777 /myapp/tools_public/tools/service_creator.sh  
-logoutput_launch_worker_docker /myapp/tools_public/tools/service_creator.sh "launch_worker_docker" "/myapp/tools_private/vm_provitionning/master/launch_worker_docker.sh"  & ls && ls
-'''
 
 
 
