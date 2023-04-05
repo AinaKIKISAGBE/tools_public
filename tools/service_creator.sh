@@ -20,7 +20,7 @@ echo "[Service] " >> /etc/systemd/system/${service_create}.service
 echo "Type=oneshot " >> /etc/systemd/system/${service_create}.service 
 echo "RemainAfterExit=yes " >> /etc/systemd/system/${service_create}.service 
 echo "ExecStart=/bin/bash /usr/local/bin/${service_create}.sh start  " >> /etc/systemd/system/${service_create}.service 
-echo "RestartSec=1s " >> /etc/systemd/system/${service_create}.service 
+#echo "RestartSec=1s " >> /etc/systemd/system/${service_create}.service 
 echo "[Install] " >> /etc/systemd/system/${service_create}.service 
 echo "WantedBy=multi-user.target" >> /etc/systemd/system/${service_create}.service 
 chmod 777 /etc/systemd/system/${service_create}.service 

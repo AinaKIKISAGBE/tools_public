@@ -72,7 +72,8 @@ mkdir /myapp/
 chmod -R 777 /myapp 
 
 ################### clone tools_public  ####################
-rm -r /myapp/tools_public & mkdir /myapp/tools_public
+rm -r /myapp/tools_public 
+mkdir /myapp/tools_public
 git clone https://github.com/AinaKIKISAGBE/tools_public.git /myapp/tools_public
 
 ##### save github_key
@@ -80,7 +81,8 @@ python3 /myapp/tools_public/python_sql_database/save_github_key_on_vm.py
 
 ################### clone tools_private  ####################
 GITHUB_TOKEN_keep=$(< /GITHUB_TOKEN)
-rm -r /myapp/tools_private & mkdir /myapp/tools_private
+rm -r /myapp/tools_private 
+mkdir /myapp/tools_private
 #git clone https://$GITHUB_TOKEN_keep@github.com/AinaKIKISAGBE/tools_private.git /myapp/tools_private or 
 git clone https://${GITHUB_TOKEN_keep}@github.com/AinaKIKISAGBE/tools_private.git /myapp/tools_private
 chmod -R 777 /myapp 
