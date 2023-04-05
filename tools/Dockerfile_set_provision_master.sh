@@ -1,7 +1,7 @@
 
 ### cmd1 && cmd2 : vérifie si la première commande s'est bien exécuter avant d'exécuter la suivante sinon le processus s'arrete 
 
-### cmd1 & cmd2 : exécute les commandes sans vérifier si la commande précédente s'est bien exécuté ou pas
+### nohup cmd : exécute les commandes en arrières plan
 
 
 
