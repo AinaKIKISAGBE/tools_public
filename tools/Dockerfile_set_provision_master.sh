@@ -96,7 +96,8 @@ chmod -R 777 /myapp
 
 cp /myapp/tools_private/vm_provitionning/master/docker/Dockerfile_provision_master.sh  Dockerfile_provision_master.sh 
 chmod +x Dockerfile_provision_master.sh 
-/Dockerfile_provision_master.sh
+
+bash /Dockerfile_provision_master.sh
 
 
 
