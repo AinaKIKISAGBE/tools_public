@@ -19,6 +19,8 @@ def create_connection():
 		ip_db = "10.0.0.4"
 	elif pc_category == "worker": # worker VM
 		ip_db = "192.168.1.47"	
+	else :
+		ip_db = "192.168.1.47"
 		
 	# hostname and port number
 	conn = psycopg2.connect(dbname='keysdb',
