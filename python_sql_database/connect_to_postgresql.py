@@ -1,4 +1,6 @@
 
+import os
+import subprocess
 import psycopg2
 
 def create_connection():
@@ -6,7 +8,10 @@ def create_connection():
 	# using the psycopg2 adapter.
 	# Pass your database name ,# username , password ,
 	### keep pc_category
-	pc_category=$(cat < /pc_id/pc_category)
+	#pc_category=$(cat < /pc_id/pc_category)
+	code = "cat < /pc_id/pc_category"
+	pc_category = subprocess.check_output(code, shell=True, universal_newlines=True)
+	pc_category = str(pc_category).split("\n")[0]
 	
 	if pc_category = "master" : # master
 		ip_db = "192.168.1.47"
