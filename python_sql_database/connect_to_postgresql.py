@@ -13,12 +13,12 @@ def create_connection():
 	pc_category = subprocess.check_output(code, shell=True, universal_newlines=True)
 	pc_category = str(pc_category).split("\n")[0]
 	
-	if pc_category = "master" : # master
-		ip_db = "192.168.1.47"
-	elif pc_category = "worker_docker": # worker docker
-		ip_db = "10.0.0.4"
+	if pc_category == "master" : # master 
+		ip_db == "192.168.1.47"
+	elif pc_category == "worker_docker": # worker docker
+		ip_db == "10.0.0.4"
 	elif pc_category = "worker": # worker VM
-		ip_db = "192.168.1.47"	
+		ip_db == "192.168.1.47"	
 		
 	# hostname and port number
 	conn = psycopg2.connect(dbname='keysdb',
