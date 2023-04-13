@@ -11,7 +11,7 @@ def create_connection():
 	if pc_category = "master" : # master
 		ip_db = "192.168.1.47"
 	elif pc_category = "worker_docker": # worker docker
-		ip_db = "10.0.0.5"
+		ip_db = "10.0.0.4"
 	elif pc_category = "worker": # worker VM
 		ip_db = "192.168.1.47"	
 		
