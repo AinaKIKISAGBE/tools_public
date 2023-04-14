@@ -35,10 +35,12 @@ apt-get update
 #>> apt-get update 
 #RUN service ssh start
 ################### remote docker  ####################
+apt-get install systemctl -y 
+apt-get update  
 apt-get install docker.io -y
+apt-get update  
 ################### other  ####################
 #>> apt-get install psmisc -y # enable to run killall
-apt-get install systemctl -y 
 #>> apt install python3-pip -y
 #>> apt install python3-venv -y
 #>> apt-get install curl -y

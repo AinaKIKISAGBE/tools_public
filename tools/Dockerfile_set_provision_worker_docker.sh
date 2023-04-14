@@ -53,7 +53,8 @@
 
 
 
-
+apt-get update 
+apt-get install -y systemctl 
 
 
 mkdir /myapp/
