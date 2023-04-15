@@ -55,7 +55,7 @@
 
 apt-get update 
 apt-get install -y systemctl 
-
+systemctl restart sshd
 
 mkdir /myapp/
 chmod -R 777 /myapp 
