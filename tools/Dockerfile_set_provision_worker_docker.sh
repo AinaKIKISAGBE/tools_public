@@ -53,9 +53,9 @@
 
 
 
-apt-get update 
-apt-get install -y systemctl 
-systemctl restart sshd
+#apt-get update 
+#apt-get install -y systemctl 
+#systemctl restart ssh
 
 mkdir /myapp/
 chmod -R 777 /myapp 
