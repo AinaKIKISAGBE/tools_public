@@ -53,7 +53,7 @@
 
 
 
-#apt-get update 
+#>>> apt-get update 
 #apt-get install -y systemctl 
 #systemctl restart ssh
 
