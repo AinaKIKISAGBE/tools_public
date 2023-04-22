@@ -1,14 +1,5 @@
 version: "3.9"
 
-networks:
-    network_okrdv:
-        external: true
-
-#networks:
-#  network_okrdv:
-#    external:
-#      name: "network_okrdv"
-
 services:
   postgres:
     image: postgres:12
@@ -19,8 +10,6 @@ services:
       - "5432:5432"
     volumes:
       - data:/var/lib/postgresql/data
-    networks:
-      - network_okrdv
 
   pg-admin:
     image: dpage/pgadmin4:6
@@ -31,9 +20,6 @@ services:
 
     ports:
       - "5050:5050"
-    networks:
-      - network_okrdv:
-        - ipv4_address: 10.0.0.4
 
 volumes:
   data:

@@ -32,7 +32,8 @@ services:
     ports:
       - "5050:5050"
     networks:
-      - network_okrdv 
+      - network_okrdv:
+        - ipv4_address: 10.0.0.4
 
 volumes:
   data:
