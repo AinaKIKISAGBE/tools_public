@@ -10,11 +10,11 @@ def create_connection():
 	### keep pc_category
 	#pc_category=$(cat < /pc_id/pc_category)
 	try :
-        code = "cat < /pc_id/pc_category"
-        pc_category = subprocess.check_output(code, shell=True, universal_newlines=True)
-        pc_category = str(pc_category).split("\n")[0]
+		code = "cat < /pc_id/pc_category"
+		pc_category = subprocess.check_output(code, shell=True, universal_newlines=True)
+		pc_category = str(pc_category).split("\n")[0]
 	except Exception :
-        pc_category = "no_no"
+		pc_category = "no_no"
     
 	if pc_category == "master" : # master
 		ip_db = "192.168.1.47"
