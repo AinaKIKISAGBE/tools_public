@@ -9,10 +9,13 @@ def create_connection():
 	# Pass your database name ,# username , password ,
 	### keep pc_category
 	#pc_category=$(cat < /pc_id/pc_category)
-	code = "cat < /pc_id/pc_category"
-	pc_category = subprocess.check_output(code, shell=True, universal_newlines=True)
-	pc_category = str(pc_category).split("\n")[0]
-	
+	try :
+        code = "cat < /pc_id/pc_category"
+        pc_category = subprocess.check_output(code, shell=True, universal_newlines=True)
+        pc_category = str(pc_category).split("\n")[0]
+	except Exception :
+        pc_category = "no_no"
+    
 	if pc_category == "master" : # master
 		ip_db = "192.168.1.47"
 	elif pc_category == "worker_docker": # worker docker
