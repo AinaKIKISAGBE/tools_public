@@ -185,5 +185,13 @@ MACRO DO_LIST;
 
 https://cmie.padoa.fr/employee/login?email=aina.kikisagbe@mel.lincoln.fr&token=FJGCFF
 
+16h30
+https://teams.microsoft.com/l/meetup-join/19%3ameeting_ODI4NzYyZWItYzJlMC00NjQwLWE5MzYtZjI3MjYxNGFlNjcy%40thread.v2/0?context=%7b%22Tid%22%3a%229bc3d1cd-55ca-4e13-b5a2-a9e9deaeba3f%22%2c%22Oid%22%3a%226a2ef8b7-b948-4949-9d4b-b6321b9edb23%22%7d
+
+
+17h
+https://teams.microsoft.com/l/meetup-join/19%3ameeting_MjA0OTYxY2QtYjY4ZS00YmEzLWFlNTUtNDc1MDg3YWFhYTA0%40thread.v2/0?context=%7b%22Tid%22%3a%229bc3d1cd-55ca-4e13-b5a2-a9e9deaeba3f%22%2c%22Oid%22%3a%226a2ef8b7-b948-4949-9d4b-b6321b9edb23%22%7d
+
+
 
 
