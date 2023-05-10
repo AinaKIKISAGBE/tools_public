@@ -192,6 +192,6 @@ https://teams.microsoft.com/l/meetup-join/19%3ameeting_ODI4NzYyZWItYzJlMC00NjQwL
 17h
 https://teams.microsoft.com/l/meetup-join/19%3ameeting_MjA0OTYxY2QtYjY4ZS00YmEzLWFlNTUtNDc1MDg3YWFhYTA0%40thread.v2/0?context=%7b%22Tid%22%3a%229bc3d1cd-55ca-4e13-b5a2-a9e9deaeba3f%22%2c%22Oid%22%3a%226a2ef8b7-b948-4949-9d4b-b6321b9edb23%22%7d
 
-
-
+18h
+https://teams.microsoft.com/l/meetup-join/19%3ameeting_OGRlYTM2ZDItMzY2MS00MDk2LWEzNGQtZjUyMjNmM2UzMjYx%40thread.v2/0?context=%7b%22Tid%22%3a%229bc3d1cd-55ca-4e13-b5a2-a9e9deaeba3f%22%2c%22Oid%22%3a%22268f78ce-9b02-4ecc-a9e7-7632aced6a15%22%7d
 
