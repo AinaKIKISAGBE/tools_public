@@ -56,6 +56,91 @@ SSSSSsS;:'  SSSSS       SSSSS SSSSS   SSSSS       SSSSS
 
 
 
+###########################################################
+######### python generate asic art 1 from image png, jpg, ...  ########################
+import sys
+import numpy as np
+from PIL import Image
+
+# Contrast on a scale -10 -> 10
+contrast = 10
+density = ('$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\|'
+           '()1{}[]?-_+~<>i!lI;:,"^`\'.            ')
+density = density[:-11+contrast]
+n = len(density)
+
+
+try:
+    img_name = sys.argv[1]
+    width = int(sys.argv[2])
+except IndexError:
+    # Default ASCII image width.
+    width = 100
+    img_name="C:/Users/user_distant/Downloads/DMKT.PNG"
+
+# Read in the image, convert to greyscale.
+img = Image.open(img_name)
+img = img.convert('L')
+# Resize the image as required.
+orig_width, orig_height = img.size
+r = orig_height / orig_width
+# The ASCII character glyphs are taller than they are wide. Maintain the aspect
+# ratio by reducing the image height.
+height = int(width * r * 0.5)
+img = img.resize((width, height), Image.ANTIALIAS)
+
+# Now map the pixel brightness to the ASCII density glyphs.
+arr = np.array(img)
+for i in range(height):
+    for j in range(width):
+        p = arr[i,j]
+        k = int(np.floor(p/256 * n))
+        print(density[n-1-k], end='')
+    print()
+
+###########################################################
+######### python generate asic art 2 from text ######################
+
+def no_use():
+    # -*- coding: utf-8 -*-
+    """
+    Created on Thu Sep 28 01:21:52 2023
+
+    @author: user_distant
+    """
+
+    from art import *
+
+    tprint("DMKT",font="rnd-large")
+
+
+    tprint("DMKT","rnd-xlarge")
+
+
+
+    text2art("DMKT",font="black") 
+
+    import pyfiglet
+
+    pyfiglet.figlet_format("DMKT",font='isometric1')
+
+
+    pyfiglet.figlet_format("DMKT", font="3-d")
+
+    pyfiglet.figlet_format("DMKT", font="alligator")
+
+
+    DMKT DTM
+
+
+
+
+
+
+
+
+
+
 
 
 
