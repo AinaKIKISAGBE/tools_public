@@ -36,8 +36,9 @@ apt-get update
 service ssh start 
 service ssh status 
 
-#service ssh restart
-#service ssh reload
+service ssh restart
+service ssh reload
+service ssh restart
 #service ssh start 
 #apt-get update 
 #RUN service ssh start
