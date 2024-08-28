@@ -139,6 +139,28 @@ def no_use():
 
 
 
+@echo off
+setlocal enabledelayedexpansion
+
+set "input_file=mon_fichier.txt"
+set "output_file=mon_fichier_modifie.txt"
+set "search_string=chaine_a_trouver"
+set "replacement_string=nouvelle_ligne"
+
+if exist "%output_file%" del "%output_file%"
+
+for /f "usebackq delims=" %%A in ("%input_file%") do (
+    set "line=%%A"
+    echo !line! | findstr /c:"%search_string%" >nul
+    if !errorlevel! equ 0 (
+        echo %replacement_string% >> "%output_file%"
+    ) else (
+        echo !line! >> "%output_file%"
+    )
+)
+
+move /y "%output_file%" "%input_file%"
+endlocal
 
 
 
