@@ -166,6 +166,109 @@ endlocal
 
 
 
+xgboost
+
+import optuna
+import xgboost as xgb
+from sklearn.datasets import load_breast_cancer
+from sklearn.model_selection import train_test_split, cross_val_score
+from sklearn.metrics import accuracy_score
+
+# Charger un jeu de données exemple
+data = load_breast_cancer()
+X, y = data.data, data.target
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Fonction objectif pour Optuna
+def objective(trial):
+    param = {
+        'max_depth': trial.suggest_int('max_depth', 3, 10),
+        'learning_rate': trial.suggest_loguniform('learning_rate', 0.01, 0.3),
+        'n_estimators': trial.suggest_int('n_estimators', 100, 1000),
+        'colsample_bytree': trial.suggest_uniform('colsample_bytree', 0.5, 1.0),
+        'subsample': trial.suggest_uniform('subsample', 0.6, 1.0),
+        'gamma': trial.suggest_loguniform('gamma', 1e-8, 1.0),
+        'min_child_weight': trial.suggest_int('min_child_weight', 1, 10),
+        'reg_alpha': trial.suggest_loguniform('reg_alpha', 1e-8, 1.0),
+        'reg_lambda': trial.suggest_loguniform('reg_lambda', 1e-8, 1.0)
+    }
+
+    xgb_model = xgb.XGBClassifier(use_label_encoder=False, eval_metric='logloss', **param)
+    score = cross_val_score(xgb_model, X_train, y_train, cv=3, scoring='accuracy').mean()
+    
+    return score
+
+# Optimisation avec Optuna
+study = optuna.create_study(direction='maximize')
+study.optimize(objective, n_trials=50)
+
+# Afficher les meilleurs hyperparamètres
+print(f"Meilleurs hyperparamètres : {study.best_params}")
+
+# Évaluer le modèle avec les meilleurs hyperparamètres
+best_params = study.best_params
+best_model = xgb.XGBClassifier(use_label_encoder=False, eval_metric='logloss', **best_params)
+best_model.fit(X_train, y_train)
+y_pred = best_model.predict(X_test)
+accuracy = accuracy_score(y_test, y_pred)
+print(f"Accuracy : {accuracy}")
+
+
+
+
+
+
+lighgbm
+
+import optuna
+import lightgbm as lgb
+from sklearn.datasets import load_breast_cancer
+from sklearn.model_selection import train_test_split, cross_val_score
+from sklearn.metrics import accuracy_score
+
+# Charger un jeu de données exemple
+data = load_breast_cancer()
+X, y = data.data, data.target
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Fonction objectif pour Optuna
+def objective(trial):
+    param = {
+        'max_depth': trial.suggest_int('max_depth', -1, 15),
+        'learning_rate': trial.suggest_loguniform('learning_rate', 0.01, 0.3),
+        'n_estimators': trial.suggest_int('n_estimators', 100, 1000),
+        'num_leaves': trial.suggest_int('num_leaves', 20, 300),
+        'colsample_bytree': trial.suggest_uniform('colsample_bytree', 0.5, 1.0),
+        'subsample': trial.suggest_uniform('subsample', 0.6, 1.0),
+        'min_child_weight': trial.suggest_int('min_child_weight', 1, 10),
+        'lambda_l1': trial.suggest_loguniform('lambda_l1', 1e-8, 1.0),
+        'lambda_l2': trial.suggest_loguniform('lambda_l2', 1e-8, 1.0)
+    }
+
+    lgb_model = lgb.LGBMClassifier(**param)
+    score = cross_val_score(lgb_model, X_train, y_train, cv=3, scoring='accuracy').mean()
+    
+    return score
+
+# Optimisation avec Optuna
+study = optuna.create_study(direction='maximize')
+study.optimize(objective, n_trials=50)
+
+# Afficher les meilleurs hyperparamètres
+print(f"Meilleurs hyperparamètres : {study.best_params}")
+
+# Évaluer le modèle avec les meilleurs hyperparamètres
+best_params = study.best_params
+best_model = lgb.LGBMClassifier(**best_params)
+best_model.fit(X_train, y_train)
+y_pred = best_model.predict(X_test)
+accuracy = accuracy_score(y_test, y_pred)
+print(f"Accuracy : {accuracy}")
+
+
+
+
+
 
 
 
