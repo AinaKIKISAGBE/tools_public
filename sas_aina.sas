@@ -267,6 +267,137 @@ print(f"Accuracy : {accuracy}")
 
 
 
+cv validation croise optuna xgboost 
+
+import optuna
+import xgboost as xgb
+from sklearn.datasets import make_classification
+from sklearn.model_selection import train_test_split, StratifiedKFold
+from sklearn.metrics import f1_score
+
+# Générer un grand jeu de données déséquilibré
+X, y = make_classification(n_samples=100000, n_features=20, n_informative=10, n_classes=2, weights=[0.9, 0.1], random_state=42)
+
+# Diviser les données en ensembles d'entraînement et de test
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Fonction objectif pour Optuna avec validation croisée
+def objective(trial):
+    param = {
+        'objective': 'binary:logistic',
+        'max_depth': trial.suggest_int('max_depth', 3, 10),
+        'learning_rate': trial.suggest_loguniform('learning_rate', 0.01, 0.3),
+        'n_estimators': trial.suggest_int('n_estimators', 100, 1000),
+        'colsample_bytree': trial.suggest_uniform('colsample_bytree', 0.5, 1.0),
+        'subsample': trial.suggest_uniform('subsample', 0.6, 1.0),
+        'gamma': trial.suggest_loguniform('gamma', 1e-8, 1.0),
+        'min_child_weight': trial.suggest_int('min_child_weight', 1, 10),
+        'scale_pos_weight': sum(y_train == 0) / sum(y_train == 1)  # Balance entre les classes
+    }
+
+    # Validation croisée stratifiée
+    cv = StratifiedKFold(n_splits=5)
+    cv_scores = []
+
+    for train_idx, valid_idx in cv.split(X_train, y_train):
+        X_cv_train, X_cv_valid = X_train[train_idx], X_train[valid_idx]
+        y_cv_train, y_cv_valid = y_train[train_idx], y_train[valid_idx]
+        
+        dtrain_cv = xgb.DMatrix(X_cv_train, label=y_cv_train)
+        dvalid_cv = xgb.DMatrix(X_cv_valid, label=y_cv_valid)
+        
+        bst = xgb.train(param, dtrain_cv, evals=[(dvalid_cv, 'eval')], early_stopping_rounds=50, verbose_eval=False)
+        preds = bst.predict(dvalid_cv)
+        pred_labels = [1 if p > 0.5 else 0 for p in preds]
+        
+        f1 = f1_score(y_cv_valid, pred_labels)
+        cv_scores.append(f1)
+
+    return sum(cv_scores) / len(cv_scores)
+
+# Optimisation avec Optuna
+study = optuna.create_study(direction='maximize')
+study.optimize(objective, n_trials=50)
+
+# Afficher les meilleurs hyperparamètres
+print(f"Meilleurs hyperparamètres : {study.best_params}")
+
+# Entraînement final avec les meilleurs hyperparamètres
+best_params = study.best_params
+dtrain = xgb.DMatrix(X_train, label=y_train)
+bst = xgb.train(best_params, dtrain, evals=[(xgb.DMatrix(X_test, label=y_test), 'eval')], early_stopping_rounds=50, verbose_eval=True)
+
+# Évaluer le modèle
+y_pred = bst.predict(xgb.DMatrix(X_test))
+pred_labels = [1 if p > 0.5 else 0 for p in y_pred]
+f1 = f1_score(y_test, pred_labels)
+print(f"F1 Score : {f1}")
+
+
+
+
+optuna cv validation croisé lightgbm 
+
+import optuna
+import lightgbm as lgb
+from sklearn.datasets import make_classification
+from sklearn.model_selection import train_test_split, StratifiedKFold
+from sklearn.metrics import f1_score
+
+# Générer un grand jeu de données déséquilibré
+X, y = make_classification(n_samples=100000, n_features=20, n_informative=10, n_classes=2, weights=[0.9, 0.1], random_state=42)
+
+# Diviser les données en ensembles d'entraînement et de test
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Fonction objectif pour Optuna avec validation croisée
+def objective(trial):
+    param = {
+        'objective': 'binary',
+        'max_depth': trial.suggest_int('max_depth', 3, 10),
+        'learning_rate': trial.suggest_loguniform('learning_rate', 0.01, 0.3),
+        'n_estimators': trial.suggest_int('n_estimators', 100, 1000),
+        'num_leaves': trial.suggest_int('num_leaves', 31, 300),
+        'colsample_bytree': trial.suggest_uniform('colsample_bytree', 0.5, 1.0),
+        'subsample': trial.suggest_uniform('subsample', 0.6, 1.0),
+        'min_child_weight': trial.suggest_int('min_child_weight', 1, 10),
+        'scale_pos_weight': sum(y_train == 0) / sum(y_train == 1)  # Balance entre les classes
+    }
+
+    # Validation croisée stratifiée
+    cv = StratifiedKFold(n_splits=5)
+    cv_scores = []
+
+    for train_idx, valid_idx in cv.split(X_train, y_train):
+        X_cv_train, X_cv_valid = X_train[train_idx], X_train[valid_idx]
+        y_cv_train, y_cv_valid = y_train[train_idx], y_train[valid_idx]
+        
+        lgb_model = lgb.LGBMClassifier(**param)
+        lgb_model.fit(X_cv_train, y_cv_train, eval_set=[(X_cv_valid, y_cv_valid)], early_stopping_rounds=50, verbose=False)
+        
+        y_cv_pred = lgb_model.predict(X_cv_valid)
+        f1 = f1_score(y_cv_valid, y_cv_pred)
+        cv_scores.append(f1)
+
+    return sum(cv_scores) / len(cv_scores)
+
+# Optimisation avec Optuna
+study = optuna.create_study(direction='maximize')
+study.optimize(objective, n_trials=50)
+
+# Afficher les meilleurs hyperparamètres
+print(f"Meilleurs hyperparamètres : {study.best_params}")
+
+# Entraînement final avec les meilleurs hyperparamètres
+best_params = study.best_params
+best_model = lgb.LGBMClassifier(**best_params)
+best_model.fit(X_train, y_train)
+y_pred = best_model.predict(X_test)
+
+# Évaluer le modèle
+f1 = f1_score(y_test, y_pred)
+print(f"F1 Score : {f1}")
+
 
 
 
