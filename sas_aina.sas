@@ -404,4 +404,49 @@ print(f"F1 Score : {f1}")
 
 
 
+selection de seuil avec roc
+
+from sklearn.metrics import roc_curve, auc
+
+# Probabilités prédites par le modèle
+y_pred_prob = bst.predict(dtest)
+
+# Calculer la courbe ROC
+fpr, tpr, thresholds = roc_curve(y_test, y_pred_prob)
+
+# Calculer l'aire sous la courbe (AUC)
+roc_auc = auc(fpr, tpr)
+
+# Choisir le meilleur seuil
+optimal_idx = np.argmax(tpr - fpr)  # Maximiser la différence
+optimal_threshold = thresholds[optimal_idx]
+
+print(f"Seuil optimal : {optimal_threshold}")
+
+
+
+
+selection du seuil avec f1
+
+from sklearn.metrics import f1_score
+
+best_f1 = 0
+best_threshold = 0.5
+
+for threshold in np.arange(0.0, 1.0, 0.01):
+    preds = (y_pred_prob >= threshold).astype(int)
+    f1 = f1_score(y_test, preds)
+    if f1 > best_f1:
+        best_f1 = f1
+        best_threshold = threshold
+
+print(f"Meilleur seuil basé sur le F1 Score : {best_threshold}")
+
+
+
+
+
+
+
+
 
