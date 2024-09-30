@@ -447,6 +447,32 @@ print(f"Meilleur seuil basé sur le F1 Score : {best_threshold}")
 
 
 
+### chech memory
+
+import psutil
+
+# Récupérer des informations sur la mémoire
+memory_info = psutil.virtual_memory()
+
+# RAM totale
+total_ram = memory_info.total / (1024 ** 3)  # Convertir en Go
+print(f"RAM totale: {total_ram:.2f} Go")
+
+# RAM disponible
+available_ram = memory_info.available / (1024 ** 3)  # Convertir en Go
+print(f"RAM disponible: {available_ram:.2f} Go")
+
+# RAM utilisée
+used_ram = memory_info.used / (1024 ** 3)  # Convertir en Go
+print(f"RAM utilisée: {used_ram:.2f} Go")
+
+# Pourcentage d'utilisation de la RAM
+ram_usage_percentage = memory_info.percent
+print(f"Pourcentage d'utilisation de la RAM: {ram_usage_percentage}%")
+
+
+
+
 
 
 
