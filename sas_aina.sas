@@ -473,6 +473,30 @@ print(f"Pourcentage d'utilisation de la RAM: {ram_usage_percentage}%")
 
 
 
+#########################################
+import sys
+import gc
+
+# Fonction pour retourner la taille des objets Python en mémoire
+def get_size(obj):
+    """Renvoie la taille de l'objet en mémoire en octets."""
+    return sys.getsizeof(obj)
+
+# Récupérer tous les objets actuels en mémoire via le garbage collector
+all_objects = gc.get_objects()
+
+# Filtrer les objets qui consomment beaucoup de mémoire (par exemple > 1 Mo)
+large_objects = [(type(obj), get_size(obj)) for obj in all_objects if get_size(obj) > 10**6]
+
+# Trier par taille décroissante
+large_objects_sorted = sorted(large_objects, key=lambda x: x[1], reverse=True)
+
+# Afficher les objets avec leur type et leur taille en Mo
+for obj_type, size in large_objects_sorted:
+    print(f"Type: {obj_type}, Taille: {size / (1024 ** 2):.2f} Mo")
+
+
+
 
 
 
