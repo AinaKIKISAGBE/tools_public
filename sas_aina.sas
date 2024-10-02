@@ -499,4 +499,45 @@ for obj_type, size in large_objects_sorted:
 
 
 
+import numpy as np
+from sklearn.model_selection import train_test_split
+
+def train_test_split_with_single_class_handling(X, y, test_size=0.2, random_state=42):
+    # Identifier les classes et leur nombre d'occurrences
+    unique, counts = np.unique(y, return_counts=True)
+    single_class = unique[counts == 1]
+    
+    # Indices des échantillons des classes avec un seul membre
+    single_class_indices = np.where(np.isin(y, single_class))[0]
+    
+    # Indices des autres classes
+    other_class_indices = np.where(~np.isin(y, single_class))[0]
+    
+    # Appliquer stratification sur les classes avec plus d'un membre
+    X_train, X_test, y_train, y_test = train_test_split(
+        X[other_class_indices], y[other_class_indices], 
+        test_size=test_size, stratify=y[other_class_indices], 
+        random_state=random_state
+    )
+    
+    # Ajouter les échantillons uniques (un seul membre) à l'ensemble d'entraînement
+    X_train = np.concatenate([X_train, X[single_class_indices]])
+    y_train = np.concatenate([y_train, y[single_class_indices]])
+
+    return X_train, X_test, y_train, y_test
+
+# Exemple d'utilisation
+X = np.array([[1], [2], [3], [4], [5], [6], [7], [8], [9]])
+y = np.array([0, 1, 1, 2, 2, 2, 3, 3, 4])  # Ici la classe 0 et 4 n'ont qu'un seul membre
+
+X_train, X_test, y_train, y_test = train_test_split_with_single_class_handling(X, y)
+
+print("X_train:", X_train)
+print("y_train:", y_train)
+print("X_test:", X_test)
+print("y_test:", y_test)
+
+
+
+
 
