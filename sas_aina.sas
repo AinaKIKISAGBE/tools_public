@@ -581,3 +581,66 @@ print("y_test:\n", y_test)
 
 
 
+
+
+
+
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.metrics import roc_auc_score
+
+# Fonction pour calculer le lift
+def calculate_lift(y_true, y_pred, num_bins=10):
+    # Créer un dataframe avec les vraies valeurs et les probabilités prédites
+    data = pd.DataFrame({'y_true': y_true, 'y_pred': y_pred})
+    
+    # Trier les données par les probabilités prédites (y_pred)
+    data = data.sort_values('y_pred', ascending=False)
+    
+    # Diviser les données en segments égaux (déciles)
+    data['bin'] = pd.qcut(data['y_pred'], q=num_bins, duplicates='drop')
+    
+    # Calculer le taux de réponse dans chaque segment
+    lift_table = data.groupby('bin')['y_true'].agg(['sum', 'count'])
+    lift_table['response_rate'] = lift_table['sum'] / lift_table['count']
+    
+    # Taux de réponse global
+    overall_response_rate = data['y_true'].mean()
+    
+    # Calculer le lift (taux de réponse dans chaque segment divisé par le taux de réponse global)
+    lift_table['lift'] = lift_table['response_rate'] / overall_response_rate
+    
+    return lift_table
+
+# Fonction pour plot le lift chart
+def plot_lift_chart(lift_table):
+    plt.figure(figsize=(10, 6))
+    
+    # Tracer le lift dans chaque segment
+    plt.plot(np.arange(1, len(lift_table) + 1), lift_table['lift'], marker='o', linestyle='-', color='b')
+    
+    # Tracer une ligne horizontale à y=1 (référence pour un modèle aléatoire)
+    plt.axhline(y=1, color='r', linestyle='--')
+    
+    plt.title('Lift Chart')
+    plt.xlabel('Deciles')
+    plt.ylabel('Lift')
+    plt.xticks(np.arange(1, len(lift_table) + 1))
+    plt.grid(True)
+    plt.show()
+
+# Exemple d'utilisation
+# y_true: vraies classes, y_pred: probabilités prédites
+y_true = np.array([0, 1, 0, 1, 1, 0, 1, 0, 1, 1])  # Exemple de vraies classes
+y_pred = np.array([0.05, 0.85, 0.15, 0.70, 0.90, 0.20, 0.95, 0.10, 0.60, 0.80])  # Exemple de probabilités prédites
+
+# Calculer le lift
+lift_table = calculate_lift(y_true, y_pred)
+
+# Afficher le lift chart
+plot_lift_chart(lift_table)
+
+
+
