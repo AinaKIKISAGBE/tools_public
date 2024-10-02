@@ -539,5 +539,45 @@ print("y_test:", y_test)
 
 
 
+import pandas as pd
+from sklearn.model_selection import train_test_split
+
+def train_test_split_with_single_class_handling_df(X, y, test_size=0.2, random_state=42):
+    # Identifier les classes et leur nombre d'occurrences
+    class_counts = y.value_counts()
+    single_class = class_counts[class_counts == 1].index
+    
+    # Indices des échantillons des classes avec un seul membre
+    single_class_indices = y[y.isin(single_class)].index
+    
+    # Indices des autres classes
+    other_class_indices = y[~y.isin(single_class)].index
+    
+    # Appliquer stratification sur les classes avec plus d'un membre
+    X_train, X_test, y_train, y_test = train_test_split(
+        X.loc[other_class_indices], y.loc[other_class_indices], 
+        test_size=test_size, stratify=y.loc[other_class_indices], 
+        random_state=random_state
+    )
+    
+    # Ajouter les échantillons uniques (un seul membre) à l'ensemble d'entraînement
+    X_train = pd.concat([X_train, X.loc[single_class_indices]])
+    y_train = pd.concat([y_train, y.loc[single_class_indices]])
+
+    return X_train, X_test, y_train, y_test
+
+# Exemple d'utilisation avec des DataFrames
+data = {'feature1': [1, 2, 3, 4, 5, 6, 7, 8, 9]}
+X = pd.DataFrame(data, index=[10, 11, 12, 13, 14, 15, 16, 17, 18])  # DataFrame avec des index aléatoires
+y = pd.Series([0, 1, 1, 2, 2, 2, 3, 3, 4], index=[10, 11, 12, 13, 14, 15, 16, 17, 18])  # Série avec index aléatoires
+
+X_train, X_test, y_train, y_test = train_test_split_with_single_class_handling_df(X, y)
+
+print("X_train:\n", X_train)
+print("y_train:\n", y_train)
+print("X_test:\n", X_test)
+print("y_test:\n", y_test)
+
+
 
 
