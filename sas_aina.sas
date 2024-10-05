@@ -647,14 +647,16 @@ plot_lift_chart(lift_table)
 
 
 ############################################## captation cumulé 
+
+################
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
 # Exemple de données : scores du modèle et variable cible (0 ou 1)
 data = {
-    'score': [0.9, 0.85, 0.8, 0.4, 0.3, 0.2, 0.1],
-    'target': [1, 0, 1, 0, 1, 0, 1]
+    'score': [0.9, 0.85, 0.8,   0.6,   0.4, 0.3, 0.2, 0.1],
+    'target': [1, 0, 1,         1,     0, 1,   0, 1]
 }
 
 # Créer un DataFrame à partir des données
@@ -674,7 +676,11 @@ df['percent_observations'] = np.arange(1, len(df) + 1) / len(df) * 100
 
 # Tracer le graphique de captation cumulée
 plt.figure(figsize=(8, 6))
-plt.plot(df['percent_observations'], df['cumulative_capture_pct'], color='red', marker='o')
+#plt.plot(df['percent_observations'], df['cumulative_capture_pct'], 
+#         color='red', 
+#         marker='o')
+plt.bar(df['percent_observations'], df['cumulative_capture_pct'], 
+        color='red', alpha=0.7)
 
 # Ajouter des titres et labels
 plt.title('Graphique de captation cumulée en fonction du score')
@@ -684,6 +690,7 @@ plt.ylabel('Pourcentage de captation cumulée')
 # Afficher le graphique
 plt.grid(True)
 plt.show()
+
 
 
 
