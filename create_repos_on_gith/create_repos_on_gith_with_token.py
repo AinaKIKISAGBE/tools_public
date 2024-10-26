@@ -1,5 +1,20 @@
-import requests
-import argparse
+
+
+import os 
+
+def import_or_install(package_name):
+    try:
+        globals()[package_name] = __import__(package_name)
+    except ImportError:
+        import subprocess
+        subprocess.check_call(["python", "-m", "pip", "install", package_name])
+        globals()[package_name] = __import__(package_name)
+
+import_or_install(package_name="requests")
+import_or_install(package_name="argparse")
+#import requests
+#import argparse
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--name", "-n", type=str, dest="name", required=True) # alias : -n
