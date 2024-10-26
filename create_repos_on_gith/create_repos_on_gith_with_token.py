@@ -31,9 +31,9 @@ except Exception as error :
     raise SystemExit(error)
 
 # exemple run :
-# python create_repos_on_gith.py --name tools_private --private true --description "begin tools_private" --github_token "your github token"
-# python create_repos_on_gith.py --github_token "your github token" --name tools_public --private false --description "begin tools_public" 
+# python create_repos_on_gith_with_token.py --name tools_private --private true --description "begin tools_private" --github_token "your github token"
+# python create_repos_on_gith_with_token.py --github_token "your github token" --name tools_public --private false --description "begin tools_public" 
 
 # avec les alias 
-# python create_repos_on_gith.py -g "your github token" -n tools_public -p false -d "begin tools_public" 
+# python create_repos_on_gith_with_token.py -g "your github token" -n tools_public -p false -d "begin tools_public" 
 
