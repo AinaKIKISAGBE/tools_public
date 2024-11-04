@@ -857,5 +857,36 @@ print("Best hyperparameters:", best_params)
 
 
 
+cccccccvcccc: convertir .py rn .ipynb 
+import os
+import jupytext
+
+# Chemin du dossier source contenant les fichiers .py
+source_folder = 'chemin/vers/dossier/source'
+
+# Chemin du dossier de destination où enregistrer les fichiers .ipynb
+destination_folder = 'chemin/vers/dossier/destination'
+
+# Vérifie que le dossier de destination existe, sinon le crée
+os.makedirs(destination_folder, exist_ok=True)
+
+# Parcours de tous les fichiers du dossier source
+for filename in os.listdir(source_folder):
+    if filename.endswith('.py'):
+        # Chemin complet du fichier .py
+        source_path = os.path.join(source_folder, filename)
+        
+        # Conversion en notebook Jupyter
+        notebook = jupytext.read(source_path)
+        
+        # Chemin complet du fichier de destination .ipynb
+        dest_path = os.path.join(destination_folder, filename.replace('.py', '.ipynb'))
+        
+        # Sauvegarde du notebook au format .ipynb
+        jupytext.write(notebook, dest_path)
+        print(f'Converti {filename} en {dest_path}')
+
+
+
 
 
