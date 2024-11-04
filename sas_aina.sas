@@ -693,6 +693,83 @@ plt.show()
 
 
 
+####################################### hyperopt 
+
+import xgboost as xgb
+from hyperopt import fmin, tpe, hp, STATUS_OK, Trials
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import roc_auc_score
+from imblearn.over_sampling import SMOTE
+import pandas as pd
+import numpy as np
+
+# Charger et prétraiter les données
+# Remplacez `data.csv` par le chemin de votre jeu de données
+data = pd.read_csv("data.csv")
+X = data.drop("target", axis=1)  # Remplacez "target" par le nom de la colonne cible
+y = data["target"]
+
+# Diviser les données en ensembles d'entraînement et de validation
+X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.2, stratify=y, random_state=42)
+
+# Sur-échantillonner l'ensemble d'entraînement pour traiter le déséquilibre
+smote = SMOTE(random_state=42)
+X_train_resampled, y_train_resampled = smote.fit_resample(X_train, y_train)
+
+# Espace de recherche des hyperparamètres
+space = {
+    'max_depth': hp.quniform('max_depth', 3, 10, 1),
+    'learning_rate': hp.loguniform('learning_rate', -3, 0),
+    'n_estimators': hp.quniform('n_estimators', 100, 1000, 50),
+    'subsample': hp.uniform('subsample', 0.5, 1),
+    'colsample_bytree': hp.uniform('colsample_bytree', 0.5, 1),
+    'gamma': hp.uniform('gamma', 0, 5),
+    'scale_pos_weight': hp.uniform('scale_pos_weight', 1, 10),
+    'min_child_weight': hp.quniform('min_child_weight', 1, 10, 1),
+    'reg_alpha': hp.loguniform('reg_alpha', -3, 3),
+    'reg_lambda': hp.loguniform('reg_lambda', -3, 3)
+}
+
+# Fonction objectif pour Hyperopt
+def objective(params):
+    # Convertir les valeurs des hyperparamètres en entiers
+    params['max_depth'] = int(params['max_depth'])
+    params['n_estimators'] = int(params['n_estimators'])
+    params['min_child_weight'] = int(params['min_child_weight'])
+
+    # Créer et entraîner le modèle
+    model = xgb.XGBClassifier(
+        objective="binary:logistic",
+        eval_metric="auc",
+        use_label_encoder=False,
+        **params
+    )
+
+    model.fit(X_train_resampled, y_train_resampled, eval_set=[(X_val, y_val)], verbose=False)
+
+    # Prédire sur l'ensemble de validation
+    y_pred = model.predict_proba(X_val)[:, 1]
+    
+    # Calculer le score ROC AUC
+    auc = roc_auc_score(y_val, y_pred)
+    
+    # Retourner le score pour Hyperopt
+    return {'loss': -auc, 'status': STATUS_OK}
+
+# Définir et lancer la recherche Hyperopt
+trials = Trials()
+best_params = fmin(
+    fn=objective,
+    space=space,
+    algo=tpe.suggest,
+    max_evals=50,
+    trials=trials
+)
+
+# Afficher les meilleurs hyperparamètres
+print("Best hyperparameters:", best_params)
+
+
 
 
 
