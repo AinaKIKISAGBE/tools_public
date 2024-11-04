@@ -770,6 +770,89 @@ best_params = fmin(
 print("Best hyperparameters:", best_params)
 
 
+#################################### hyperopt v2 
+import xgboost as xgb
+from hyperopt import fmin, tpe, hp, STATUS_OK, Trials
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import roc_auc_score
+from imblearn.over_sampling import SMOTE
+import pandas as pd
+
+# Charger et prétraiter les données
+data = pd.read_csv("data.csv")  # Remplacez par votre fichier de données
+X = data.drop("target", axis=1)  # Remplacez "target" par le nom de la colonne cible
+y = data["target"]
+
+# Diviser les données en ensembles d'entraînement et de validation
+X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.2, stratify=y, random_state=42)
+
+# Sur-échantillonner l'ensemble d'entraînement pour traiter le déséquilibre
+smote = SMOTE(random_state=42)
+X_train_resampled, y_train_resampled = smote.fit_resample(X_train, y_train)
+
+# Créer des matrices de données DMatrix pour XGBoost
+dtrain = xgb.DMatrix(X_train_resampled, label=y_train_resampled)
+dval = xgb.DMatrix(X_val, label=y_val)
+
+# Définir la fonction objectif pour Hyperopt
+def objective(params):
+    # Définir les paramètres de l'espace de recherche
+    params = {
+        'objective': 'binary:logistic',
+        'eval_metric': 'auc',
+        'max_depth': int(params['max_depth']),
+        'learning_rate': params['learning_rate'],
+        'n_estimators': int(params['n_estimators']),
+        'subsample': params['subsample'],
+        'colsample_bytree': params['colsample_bytree'],
+        'gamma': params['gamma'],
+        'scale_pos_weight': params['scale_pos_weight'],
+        'min_child_weight': int(params['min_child_weight']),
+        'reg_alpha': params['reg_alpha'],
+        'reg_lambda': params['reg_lambda']
+    }
+
+    # Entraîner le modèle XGBoost avec validation
+    evals = [(dval, 'validation')]
+    model = xgb.train(params, dtrain, num_boost_round=1000, evals=evals, early_stopping_rounds=50, verbose_eval=False)
+    
+    # Prédire sur l'ensemble de validation
+    y_pred = model.predict(dval)
+    
+    # Calculer le score ROC AUC
+    auc = roc_auc_score(y_val, y_pred)
+    
+    # Hyperopt minimise, donc on retourne la perte négative d'AUC
+    return {'loss': -auc, 'status': STATUS_OK}
+
+# Définir l'espace de recherche des hyperparamètres
+space = {
+    'max_depth': hp.quniform('max_depth', 3, 10, 1),
+    'learning_rate': hp.loguniform('learning_rate', -3, 0),  # loguniform pour des valeurs continues
+    'n_estimators': hp.quniform('n_estimators', 100, 1000, 50),
+    'subsample': hp.uniform('subsample', 0.5, 1),
+    'colsample_bytree': hp.uniform('colsample_bytree', 0.5, 1),
+    'gamma': hp.uniform('gamma', 0, 5),
+    'scale_pos_weight': hp.uniform('scale_pos_weight', 1, 10),
+    'min_child_weight': hp.quniform('min_child_weight', 1, 10, 1),
+    'reg_alpha': hp.loguniform('reg_alpha', -3, 0),  # Régularisation L1
+    'reg_lambda': hp.loguniform('reg_lambda', -3, 0)  # Régularisation L2
+}
+
+# Initialiser Trials pour enregistrer les résultats
+trials = Trials()
+
+# Lancer l'optimisation avec Hyperopt
+best_params = fmin(
+    fn=objective,
+    space=space,
+    algo=tpe.suggest,
+    max_evals=50,
+    trials=trials
+)
+
+# Afficher les meilleurs hyperparamètres trouvés
+print("Best hyperparameters:", best_params)
 
 
 
