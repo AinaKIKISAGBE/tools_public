@@ -858,6 +858,9 @@ print("Best hyperparameters:", best_params)
 
 
 cccccccvcccc: convertir .py rn .ipynb 
+pip install jupytext
+
+
 import os
 import jupytext
 
